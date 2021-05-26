@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-5 mb-4 rounded-3">
+    <div class="container-fluid">
+        <h1>Leaderboard</h1>
+        <table id="leaderboard-table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Team</th>
+                    <th>Date and Time</th>
+                    <th>Accuracy</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for submission in leaderboard %}
+                <tr>
+                    <th>{{ loop.index + offset }}</th>
+                    <th>{{ submission.username }}</th>
+                    <th>{{ submission.create_timestamp.isoformat(' ', 'seconds') }}</th>
+                    <th>{{ submission.acc }}</th>
+                    <th>{{ submission.time }}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% for offset in paginate %}
+                <li class="page-item"><a class="page-link" href="?offset={{ offset }}">{{ loop.index }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+    <div class="container-fluid">
+        <h1>Team Bests</h1>
+        <table id="teambest-table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Team</th>
+                    <th>Accuracy</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for submission in teambest %}
+                <tr>
+                    <th>{{ loop.index + offset }}</th>
+                    <th>{{ submission.username }}</th>
+                    <th>{{ submission.acc }}</th>
+                    <th>{{ submission.time }}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#leaderboard-table').DataTable({
+            "paging": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    $(document).ready(function () {
+        $('#teambest-table').DataTable({
+            "paging": false,
+            "info": false,
+            "searching": false
+        });
+    });
+</script>
+{% endblock %}

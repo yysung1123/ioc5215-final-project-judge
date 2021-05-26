@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="p-5 mb-4 rounded-3">
+    <div class="container-fluid">
+        <h1 class="display-5 fw-bold text-center">NAS</h1>
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="file" class="form-label">Model Architecture Parameters (NumPy .npy format)</label>
+                <input class="form-control" type="file" id="file" name="file">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

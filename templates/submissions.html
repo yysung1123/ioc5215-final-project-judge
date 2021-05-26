@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-5 mb-4 rounded-3">
+    <div class="container-fluid">
+        <h1>Submissions</h1>
+        <table id="submissions-table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date and Time</th>
+                    <th>Accuracy</th>
+                    <th>Time</th>
+                    <th>Verdict</th>
+                    <th>Error Messages</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for submission in submissions %}
+                <tr>
+                    <th>{{ submission.id }}</th>
+                    <th>{{ submission.create_timestamp.isoformat(' ', 'seconds') }}</th>
+                    <th>{{ submission.acc }}</th>
+                    <th>{{ submission.time }}</th>
+                    <th>{{ submission.status.name }}</th>
+                    <th>
+                        {% autoescape false %}
+                        {{ submission.error_msg | replace('\n', '<br>') }}
+                        {% endautoescape %}
+                    </th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% for offset in paginate %}
+                <li class="page-item"><a class="page-link" href="?offset={{ offset }}">{{ loop.index }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        table = $('#submissions-table').DataTable({
+            "paging": false,
+            "info": false,
+            "searching": false
+        });
+        table
+            .column('1:visible')
+            .order('desc')
+            .draw();
+    });
+</script>
+{% endblock %}
