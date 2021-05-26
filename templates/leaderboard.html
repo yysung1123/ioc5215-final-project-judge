@@ -60,11 +60,15 @@
 </div>
 <script>
     $(document).ready(function () {
-        $('#leaderboard-table').DataTable({
+        leaderboardTable = $('#leaderboard-table').DataTable({
             "paging": false,
             "info": false,
             "searching": false
         });
+        leaderboardTable
+            .column('3:visible')
+            .order('desc')
+            .draw();
     });
     $(document).ready(function () {
         $('#teambest-table').DataTable({
