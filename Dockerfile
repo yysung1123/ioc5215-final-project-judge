@@ -6,6 +6,8 @@ ADD . /app
 
 RUN pip install -r requirements.txt
 
+ENV TZ=Asia/Taipei
+
 ENV FLASK_APP=judge.py
 
 CMD python3 -m flask run --host=0.0.0.0
