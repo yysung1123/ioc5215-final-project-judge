@@ -3,13 +3,16 @@ certifi==2020.12.5
 chardet==4.0.0
 click==8.0.1
 Flask==2.0.1
+Flask-Limiter==1.4
 idna==2.10
 itsdangerous==2.0.1
 Jinja2==3.0.1
+limits==1.5.1
 MarkupSafe==2.0.1
 numpy==1.20.3
 pycodestyle==2.7.0
 requests==2.25.1
+six==1.16.0
 toml==0.10.2
 urllib3==1.26.4
 uWSGI==2.0.19.1

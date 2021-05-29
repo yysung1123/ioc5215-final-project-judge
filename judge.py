@@ -6,6 +6,8 @@ from predictor import check_range, predict
 from enum import IntEnum
 from datetime import datetime
 from config import SECRET_KEY, UPLOAD_FOLDER, NCTU_APP_REDIRECT_URI, NCTU_APP_CLIENT_ID, NCTU_APP_CLIENT_SECRET, DATABASE, TIME_VALID_UPPER_BOUND
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 import numpy as np
 import os
@@ -17,6 +19,12 @@ PAGINATION = 50
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["10 per second"]
+)
 
 nctu = Oauth(
     redirect_uri=NCTU_APP_REDIRECT_URI,
@@ -173,6 +181,7 @@ def nas():
 
 
 @app.route('/nas', methods=['POST'])
+@limiter.limit("1 per second")
 def submit():
     if not session.get('logged_in'):
         return redirect('/login')
