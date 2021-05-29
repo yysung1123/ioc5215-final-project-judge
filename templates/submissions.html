@@ -22,7 +22,11 @@
                     <th>{{ submission.create_timestamp.isoformat(' ', 'seconds') }}</th>
                     <th>{{ submission.acc }}</th>
                     <th>{{ submission.time }}</th>
-                    <th>{{ submission.status.name }}</th>
+                    {% if submission.status == SubmissionStatus.VALID %}
+                    <th><p class="text-success">{{ submission.status.name }}</p></th>
+                    {% else %}
+                    <th><p class="text-danger">{{ submission.status.name }}</p></th>
+                    {% endif %}
                     <th>
                         {% autoescape false %}
                         {{ submission.error_msg | replace('\n', '<br>') }}

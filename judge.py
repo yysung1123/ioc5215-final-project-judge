@@ -59,6 +59,9 @@ class SubmissionStatus(IntEnum):
     ERROR = 2
 
 
+app.add_template_global(SubmissionStatus, 'SubmissionStatus')
+
+
 class Submission:
     def __init__(self, id, username, status, acc, time, error_msg, create_timestamp):
         self.id = id
