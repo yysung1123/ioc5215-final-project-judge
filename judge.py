@@ -167,53 +167,54 @@ def index():
     return render_template('index.html', session=session)
 
 
-@app.route('/nas', methods=['GET', 'POST'])
+@app.route('/nas', methods=['GET'])
 def nas():
-    if request.method == 'POST':
-        if not session.get('logged_in'):
-            return redirect('/login')
-        username = session.get('username')
+    return render_template('nas.html', session=session)
 
-        if 'file' not in request.files:
-            return redirect(request.url)
-        file = request.files['file']
 
-        if file.filename == '':
-            return redirect(request.url)
+@app.route('/nas', methods=['POST'])
+def submit():
+    if not session.get('logged_in'):
+        return redirect('/login')
+    username = session.get('username')
 
-        if not file or not allowed_file(file.filename):
-            flash("Not allowed extension (.npy)")
-            return redirect(request.url)
+    if 'file' not in request.files:
+        return redirect(request.url)
+    file = request.files['file']
 
-        try:
-            model_architecture = np.load(file)
-        except Exception as e:
-            print(e)
-            flash("Not a valid npy file")
-            return redirect(request.url)
+    if file.filename == '':
+        return redirect(request.url)
 
-        error, msgs = check_range(model_architecture)
-        if error:
-            Submission.create(username, SubmissionStatus.ERROR,
-                              0.0, 0.0, "\n".join(msgs))
-            return redirect('/submissions')
+    if not file or not allowed_file(file.filename):
+        flash("Not allowed extension (.npy)")
+        return redirect(request.url)
 
-        acc, time = predict(model_architecture)
+    try:
+        model_architecture = np.load(file)
+    except Exception as e:
+        print(e)
+        flash("Not a valid npy file")
+        return redirect(request.url)
 
-        if time <= TIME_VALID_UPPER_BOUND:
-            submission = Submission.create(
-                username, SubmissionStatus.VALID, acc, time, "")
-        else:
-            submission = Submission.create(
-                username, SubmissionStatus.INVALID, acc, time, f"Time > {TIME_VALID_UPPER_BOUND}ms")
-
-        file.save(os.path.join(
-            app.config['UPLOAD_FOLDER'], f'{submission.id}.npy'))
-
+    error, msgs = check_range(model_architecture)
+    if error:
+        Submission.create(username, SubmissionStatus.ERROR,
+                          0.0, 0.0, "\n".join(msgs))
         return redirect('/submissions')
 
+    acc, time = predict(model_architecture)
+
+    if time <= TIME_VALID_UPPER_BOUND:
+        submission = Submission.create(
+            username, SubmissionStatus.VALID, acc, time, "")
     else:
-        return render_template('nas.html', session=session)
+        submission = Submission.create(
+            username, SubmissionStatus.INVALID, acc, time, f"Time > {TIME_VALID_UPPER_BOUND}ms")
+
+    file.save(os.path.join(
+        app.config['UPLOAD_FOLDER'], f'{submission.id}.npy'))
+
+    return redirect('/submissions')
 
 
 @app.route('/leaderboard')
