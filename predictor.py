@@ -13,51 +13,52 @@ def get_latency(x):
     return latency0 + sum(x * latency_array)
 
 def predict(array):
-    tot_24, tot_40, tot_80, tot_112, tot_160 = array[0:5]
-    avg_e_24, avg_e_40, avg_e_80, avg_e_112, avg_e_160 = array[5:10]
-    avg_k_24, avg_k_40, avg_k_80, avg_k_112, avg_k_160 = array[10:15]
-    tot_e_16_24, tot_e_24_40, tot_e_40_80, tot_e_80_112, tot_e_112_160 = array[15:20]
-    tot_k_16_24, tot_k_24_40, tot_k_40_80, tot_k_80_112, tot_k_112_160 = array[20:25]
+    d1, d2, d3, d4, d5 = array[0:5]
+    avg_e1, avg_e2, avg_e3, avg_e4, avg_e5 = array[5:10]
+    avg_k1, avg_k2, avg_k3, avg_k4, avg_k5 = array[10:15]
+    e1, e2, e3, e4, e5 = array[15:20]
+    k1, k2, k3, k4, k5 = array[20:25]
 
     # use the accuracy predictor to predict the accuracy of a model (Do NOT modify!)
-    x_acc = np.array([tot_24, tot_40, tot_80, tot_112, tot_160,
-                    avg_e_24, avg_e_40, avg_e_80, avg_e_112, avg_e_160,
-                    avg_k_24, avg_k_40, avg_k_80, avg_k_112, avg_k_160,
-                    tot_e_16_24, tot_e_24_40, tot_e_40_80, tot_e_80_112, tot_e_112_160,
-                    tot_k_16_24, tot_k_24_40, tot_k_40_80, tot_k_80_112, tot_k_112_160,
-                    (tot_24 - 1) * avg_e_24,
-                    (tot_40 - 1) * avg_e_40,
-                    (tot_80 - 1) * avg_e_80,
-                    (tot_112 - 1) * avg_e_112,
-                    (tot_160 - 1) * avg_e_160,
-                    tot_24 * (tot_24 - 1) * avg_e_24,
-                    tot_40 * (tot_40 - 1) * avg_e_40,
-                    tot_80 * (tot_80 - 1) * avg_e_80,
-                    tot_112 * (tot_112 - 1) * avg_e_112,
-                    tot_160 * (tot_160 - 1) * avg_e_160,
-                    tot_24 * avg_k_24,
-                    tot_40 * avg_k_40,
-                    tot_80 * avg_k_80,
-                    tot_112 * avg_k_112,
-                    tot_160 * avg_k_160])
+    x_acc = np.array([d1, d2, d3, d4, d5,
+                    avg_e1, avg_e2, avg_e3, avg_e4, avg_e5,
+                    avg_k1, avg_k2, avg_k3, avg_k4, avg_k5,
+                    e1, e2, e3, e4, e5,
+                    k1, k2, k3, k4, k5,
+                    (d1 - 1) * avg_e1,
+                    (d2 - 1) * avg_e2,
+                    (d3 - 1) * avg_e3,
+                    (d4 - 1) * avg_e4,
+                    (d5 - 1) * avg_e5,
+                    d1 * (d1 - 1) * avg_e1,
+                    d2 * (d2 - 1) * avg_e2,
+                    d3 * (d3 - 1) * avg_e3,
+                    d4 * (d4 - 1) * avg_e4,
+                    d5 * (d5 - 1) * avg_e5,
+                    d1 * avg_k1,
+                    d2 * avg_k2,
+                    d3 * avg_k3,
+                    d4 * avg_k4,
+                    d5 * avg_k5])
 
     predicted_acc = get_acc(x_acc)
 
-    x_latency = np.array([tot_24, tot_40, tot_80, tot_112, tot_160,
-                        avg_e_24, avg_e_40, avg_e_80, avg_e_112, avg_e_160,
-                        avg_k_24, avg_k_40, avg_k_80, avg_k_112, avg_k_160,
-                        tot_e_16_24, tot_e_24_40, tot_e_40_80, tot_e_80_112, tot_e_112_160,
-                        tot_k_16_24, tot_k_24_40, tot_k_40_80, tot_k_80_112, tot_k_112_160,
-                        tot_24 * avg_e_24,
-                        tot_40 * avg_e_40,
-                        tot_80 * avg_e_80,
-                        tot_112 * avg_e_112,
-                        tot_160 * avg_e_160,
-                        tot_24 * avg_k_24,
-                        tot_40 * avg_k_40,
-                        tot_80 * avg_k_80,
-                        tot_112 * avg_k_112,
-                        tot_160 * avg_k_160])
+    # use the latency predictor to predict the latency of a model (Do NOT modify!)
+    x_latency = np.array([d1, d2, d3, d4, d5,
+                        avg_e1, avg_e2, avg_e3, avg_e4, avg_e5,
+                        avg_k1, avg_k2, avg_k3, avg_k4, avg_k5,
+                        e1, e2, e3, e4, e5,
+                        k1, k2, k3, k4, k5,
+                        d1 * avg_e1,
+                        d2 * avg_e2,
+                        d3 * avg_e3,
+                        d4 * avg_e4,
+                        d5 * avg_e5,
+                        d1 * avg_k1,
+                        d2 * avg_k2,
+                        d3 * avg_k3,
+                        d4 * avg_k4,
+                        d5 * avg_k5])
 
     predicted_latency = get_latency(x_latency)
 
@@ -71,11 +72,11 @@ def check_range(array):
     if array.shape != (35,):
         return (True, [f"Array shape should be (35,). Got {array.shape}"])
 
-    column_name = np.array(['tot_24', 'tot_40', 'tot_80', 'tot_112', 'tot_160',
-                            'avg_e_24', 'avg_e_40', 'avg_e_80', 'avg_e_112', 'avg_e_160',
-                            'avg_k_24', 'avg_k_40', 'avg_k_80', 'avg_k_112', 'avg_k_160',
-                            'tot_e_16_24', 'tot_e_24_40', 'tot_e_40_80', 'tot_e_80_112', 'tot_e_112_160',
-                            'tot_k_16_24', 'tot_k_24_40', 'tot_k_40_80', 'tot_k_80_112', 'tot_k_112_160'])
+    column_name = np.array(['d1', 'd2', 'd3', 'd4', 'd5',
+                            'avg_e1', 'avg_e2', 'avg_e3', 'avg_e4', 'avg_e5',
+                            'avg_k1', 'avg_k2', 'avg_k3', 'avg_k4', 'avg_k5',
+                            'e1', 'e2', 'e3', 'e4', 'e5',
+                            'k1', 'k2', 'k3', 'k4', 'k5'])
     depth_error = np.isin(array[0:5], [2, 3, 4], invert=True).tolist()
     for x in column_name[0:5][depth_error]:
         print(x, 'is not in [2, 3, 4]')
@@ -107,63 +108,63 @@ def check_range(array):
 if __name__ == '__main__':
 
     # 1. choose depth from [2, 3, 4]:
-    #    tot_24, tot_40, tot_80, tot_112, tot_160
+    #    d1, d2, d3, d4, d5
     # 2. choose expand ratio from [2, 3, 4, 6]:
-    #    avg_e_24, avg_e_40, avg_e_80, avg_e_112, avg_e_160, tot_e_16_24, tot_e_24_40, tot_e_40_80, tot_e_80_112, tot_e_112_160
+    #    avg_e1, avg_e2, avg_e3, avg_e4, avg_e5, e1, e2, e3, e4, e5
     # 3. choose kernel size from [3, 5, 7]:
-    #    avg_k_24, avg_k_40, avg_k_80, avg_k_112, avg_k_160, tot_k_16_24, tot_k_24_40, tot_k_40_80, tot_k_80_112, tot_k_112_160
+    #    avg_k1, avg_k2, avg_k3, avg_k4, avg_k5, k1, k2, k3, k4, k5
 
     array = np.load('legal.npy')
     error = check_range(array)
 
     if not error :
         # example architecture (you need to search the best architecture yourself!)
-        tot_24, tot_40, tot_80, tot_112, tot_160 = array[0:5]
-        avg_e_24, avg_e_40, avg_e_80, avg_e_112, avg_e_160 = array[5:10]
-        avg_k_24, avg_k_40, avg_k_80, avg_k_112, avg_k_160 = array[10:15]
-        tot_e_16_24, tot_e_24_40, tot_e_40_80, tot_e_80_112, tot_e_112_160 = array[15:20]
-        tot_k_16_24, tot_k_24_40, tot_k_40_80, tot_k_80_112, tot_k_112_160 = array[20:25]
+        d1, d2, d3, d4, d5 = array[0:5]
+        avg_e1, avg_e2, avg_e3, avg_e4, avg_e5 = array[5:10]
+        avg_k1, avg_k2, avg_k3, avg_k4, avg_k5 = array[10:15]
+        e1, e2, e3, e4, e5 = array[15:20]
+        k1, k2, k3, k4, k5 = array[20:25]
 
         # use the accuracy predictor to predict the accuracy of a model (Do NOT modify!)
-        x_acc = np.array([tot_24, tot_40, tot_80, tot_112, tot_160,
-                        avg_e_24, avg_e_40, avg_e_80, avg_e_112, avg_e_160,
-                        avg_k_24, avg_k_40, avg_k_80, avg_k_112, avg_k_160,
-                        tot_e_16_24, tot_e_24_40, tot_e_40_80, tot_e_80_112, tot_e_112_160,
-                        tot_k_16_24, tot_k_24_40, tot_k_40_80, tot_k_80_112, tot_k_112_160,
-                        (tot_24 - 1) * avg_e_24,
-                        (tot_40 - 1) * avg_e_40,
-                        (tot_80 - 1) * avg_e_80,
-                        (tot_112 - 1) * avg_e_112,
-                        (tot_160 - 1) * avg_e_160,
-                        tot_24 * (tot_24 - 1) * avg_e_24,
-                        tot_40 * (tot_40 - 1) * avg_e_40,
-                        tot_80 * (tot_80 - 1) * avg_e_80,
-                        tot_112 * (tot_112 - 1) * avg_e_112,
-                        tot_160 * (tot_160 - 1) * avg_e_160,
-                        tot_24 * avg_k_24,
-                        tot_40 * avg_k_40,
-                        tot_80 * avg_k_80,
-                        tot_112 * avg_k_112,
-                        tot_160 * avg_k_160])
+        x_acc = np.array([d1, d2, d3, d4, d5,
+                        avg_e1, avg_e2, avg_e3, avg_e4, avg_e5,
+                        avg_k1, avg_k2, avg_k3, avg_k4, avg_k5,
+                        e1, e2, e3, e4, e5,
+                        k1, k2, k3, k4, k5,
+                        (d1 - 1) * avg_e1,
+                        (d2 - 1) * avg_e2,
+                        (d3 - 1) * avg_e3,
+                        (d4 - 1) * avg_e4,
+                        (d5 - 1) * avg_e5,
+                        d1 * (d1 - 1) * avg_e1,
+                        d2 * (d2 - 1) * avg_e2,
+                        d3 * (d3 - 1) * avg_e3,
+                        d4 * (d4 - 1) * avg_e4,
+                        d5 * (d5 - 1) * avg_e5,
+                        d1 * avg_k1,
+                        d2 * avg_k2,
+                        d3 * avg_k3,
+                        d4 * avg_k4,
+                        d5 * avg_k5])
 
         predicted_acc = get_acc(x_acc)
 
         # use the latency predictor to predict the latency of a model (Do NOT modify!)
-        x_latency = np.array([tot_24, tot_40, tot_80, tot_112, tot_160,
-                            avg_e_24, avg_e_40, avg_e_80, avg_e_112, avg_e_160,
-                            avg_k_24, avg_k_40, avg_k_80, avg_k_112, avg_k_160,
-                            tot_e_16_24, tot_e_24_40, tot_e_40_80, tot_e_80_112, tot_e_112_160,
-                            tot_k_16_24, tot_k_24_40, tot_k_40_80, tot_k_80_112, tot_k_112_160,
-                            tot_24 * avg_e_24,
-                            tot_40 * avg_e_40,
-                            tot_80 * avg_e_80,
-                            tot_112 * avg_e_112,
-                            tot_160 * avg_e_160,
-                            tot_24 * avg_k_24,
-                            tot_40 * avg_k_40,
-                            tot_80 * avg_k_80,
-                            tot_112 * avg_k_112,
-                            tot_160 * avg_k_160])
+        x_latency = np.array([d1, d2, d3, d4, d5,
+                            avg_e1, avg_e2, avg_e3, avg_e4, avg_e5,
+                            avg_k1, avg_k2, avg_k3, avg_k4, avg_k5,
+                            e1, e2, e3, e4, e5,
+                            k1, k2, k3, k4, k5,
+                            d1 * avg_e1,
+                            d2 * avg_e2,
+                            d3 * avg_e3,
+                            d4 * avg_e4,
+                            d5 * avg_e5,
+                            d1 * avg_k1,
+                            d2 * avg_k2,
+                            d3 * avg_k3,
+                            d4 * avg_k4,
+                            d5 * avg_k5])
 
         predicted_latency = get_latency(x_latency)
 
