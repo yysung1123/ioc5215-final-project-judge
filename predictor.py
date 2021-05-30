@@ -69,8 +69,8 @@ def check_range(array):
     error_messages = []
 
     # 檢查depth、expand ration、kernel size是否合規定
-    if array.shape != (35,):
-        return (True, [f"Array shape should be (35,). Got {array.shape}"])
+    if array.shape != (25,):
+        return (True, [f"Array shape should be (25,). Got {array.shape}"])
 
     column_name = np.array(['d1', 'd2', 'd3', 'd4', 'd5',
                             'avg_e1', 'avg_e2', 'avg_e3', 'avg_e4', 'avg_e5',
