@@ -123,7 +123,7 @@ class Submission:
             db = get_db()
 
             cur = db.cursor()
-            cur.execute('SELECT * FROM submissions WHERE status = ? ORDER BY acc DESC LIMIT ? OFFSET ?',
+            cur.execute('SELECT * FROM submissions WHERE status = ? ORDER BY acc DESC, create_timestamp LIMIT ? OFFSET ?',
                         [SubmissionStatus.VALID, limit, offset])
             return [Submission(*row) for row in cur.fetchall()]
 
@@ -143,7 +143,7 @@ class Submission:
             db = get_db()
 
             cur = db.cursor()
-            cur.execute('SELECT *, MAX(acc) FROM submissions WHERE status = ? GROUP BY username ORDER BY acc DESC',
+            cur.execute('SELECT *, MAX(acc) FROM submissions WHERE status = ? GROUP BY username ORDER BY acc DESC, create_timestamp',
                         [SubmissionStatus.VALID])
             return [Submission(*row[:-1]) for row in cur.fetchall()]
 
