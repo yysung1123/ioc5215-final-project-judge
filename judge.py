@@ -1,10 +1,12 @@
 from flask import *
 from werkzeug.utils import secure_filename
-from nctu_oauth import Oauth
+from nctu_oauth import Oauth, NCTU_OAUTH_URL, NYCU_OAUTH_URL
 from predictor import check_range, predict
 from enum import IntEnum
 from datetime import datetime
-from config import SECRET_KEY, UPLOAD_FOLDER, NCTU_APP_REDIRECT_URI, NCTU_APP_CLIENT_ID, NCTU_APP_CLIENT_SECRET, DATABASE, TIME_VALID_UPPER_BOUND
+from config import (SECRET_KEY, UPLOAD_FOLDER, NCTU_APP_REDIRECT_URI,
+                    NCTU_APP_CLIENT_ID, NCTU_APP_CLIENT_SECRET, NYCU_APP_REDIRECT_URI,
+                    NYCU_APP_CLIENT_ID, NYCU_APP_CLIENT_SECRET, DATABASE, TIME_VALID_UPPER_BOUND)
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -28,7 +30,15 @@ limiter = Limiter(
 nctu = Oauth(
     redirect_uri=NCTU_APP_REDIRECT_URI,
     client_id=NCTU_APP_CLIENT_ID,
-    client_secret=NCTU_APP_CLIENT_SECRET
+    client_secret=NCTU_APP_CLIENT_SECRET,
+    oauth_url=NCTU_OAUTH_URL
+)
+
+nycu = Oauth(
+    redirect_uri=NYCU_APP_REDIRECT_URI,
+    client_id=NYCU_APP_CLIENT_ID,
+    client_secret=NYCU_APP_CLIENT_SECRET,
+    oauth_url=NYCU_OAUTH_URL
 )
 
 
@@ -150,7 +160,17 @@ class Submission:
 
 @app.route('/login')
 def login():
+    return render_template('login.html', session=session)
+
+
+@app.route('/login/nctu')
+def login_nctu():
     return nctu.authorize()
+
+
+@app.route('/login/nycu')
+def login_nycu():
+    return nycu.authorize()
 
 
 @app.route('/logout')
@@ -159,11 +179,21 @@ def logout():
     return redirect('/')
 
 
-@app.route('/auth')
-def auth():
+@app.route('/auth/nctu')
+def auth_nctu():
     code = request.args.get('code')
     if code:
         if nctu.get_token(code):
+            return redirect('/')
+
+    return redirect('/login')
+
+
+@app.route('/auth/nycu')
+def auth_nycu():
+    code = request.args.get('code')
+    if code:
+        if nycu.get_token(code):
             return redirect('/')
 
     return redirect('/login')
