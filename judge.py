@@ -6,7 +6,8 @@ from enum import IntEnum
 from datetime import datetime
 from config import (SECRET_KEY, UPLOAD_FOLDER, NCTU_APP_REDIRECT_URI,
                     NCTU_APP_CLIENT_ID, NCTU_APP_CLIENT_SECRET, NYCU_APP_REDIRECT_URI,
-                    NYCU_APP_CLIENT_ID, NYCU_APP_CLIENT_SECRET, DATABASE, TIME_VALID_UPPER_BOUND)
+                    NYCU_APP_CLIENT_ID, NYCU_APP_CLIENT_SECRET, DATABASE, TIME_VALID_UPPER_BOUND,
+                    DEADLINE)
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -215,6 +216,9 @@ def submit():
     if not session.get('logged_in'):
         return redirect('/login')
     username = session.get('username')
+
+    if datetime.strptime(DEADLINE,'%Y/%m/%d %H:%M:%S') <= datetime.now():
+        return Response(response="The protocol is disabled. Reason: Deadline exceeded", status=403)
 
     if 'file' not in request.files:
         return redirect(request.url)
